@@ -1,12 +1,14 @@
-# **RealEstateApp Backend**
+# **RealEstateApp Backend & Frontend**
 
 ## **Project Overview**
 
-The RealEstateApp backend is a RESTful API built using **.NET 8**, **MongoDB**, and follows a **clean architecture** approach. It provides endpoints for managing property data, such as fetching, creating, updating, and deleting properties.
+The RealEstateApp project is a full-stack application consisting of a **.NET 8** backend and a **Next.js** frontend. It provides a platform for managing property data, including fetching, creating, updating, and deleting properties.
 
 ---
 
 ## **Technologies Used**
+
+### Backend
 
 - **.NET 8**: For building the backend API.
 - **MongoDB**: As the database for storing property and owner data.
@@ -14,6 +16,13 @@ The RealEstateApp backend is a RESTful API built using **.NET 8**, **MongoDB**, 
 - **xUnit**: For running unit tests.
 - **Swagger**: For API documentation and testing.
 - **FluentAssertions**: For fluent-style assertions in tests.
+
+### Frontend
+
+- **Next.js**: For building the frontend.
+- **TypeScript**: For type-safe development.
+- **Axios**: For making HTTP requests to the backend.
+- **SCSS**: For styling the application.
 
 ---
 
@@ -23,27 +32,55 @@ The project uses a clean architecture with the following structure:
 
 ```bash
 RealEstateApp/
-├── RealEstateApp.Api/
+├── RealEstateApp.Api/          # Backend
 │   ├── Application/
 │   ├── Controllers/
 │   ├── appsettings.json
 │   └── Program.cs
-├── RealEstateApp.Domain/
+├── RealEstateApp.Domain/       # Domain Models
 │   ├── Models/
 │   └── Property.cs
-├── RealEstateApp.Infrastructure/
+├── RealEstateApp.Infrastructure/ # Infrastructure
 │   ├── Context/
 │   │   └── ApplicationDbContext.cs
 │   ├── PropertyRepository.cs
 │   ├── IPropertyRepository.cs
 │   └── InfrastructureServiceExtensions.cs
-├── RealEstateApp.Tests/
+├── RealEstateApp.Tests/        # Backend Tests
 │   ├── UnitTests/
 │   │   ├── Controllers/
 │   │   ├── Repositories/
 │   │   └── Services/
 │   └── IntegrationTests/
-├── RealEstateApp.sln
+├── RealEstateApp.Frontend/     # Frontend
+│   ├── public/
+│   │   └── images/             # Static images
+│   ├── src/
+│   │   ├── components/         # Reusable components
+│   │   │   ├── Layout.tsx
+│   │   │   └── Navbar.tsx
+│   │   ├── pages/              # Pages
+│   │   │   ├── api/
+│   │   │   │   └── hello.ts
+│   │   │   ├── index.tsx
+│   │   │   ├── _app.tsx
+│   │   │   ├── _document.tsx
+│   │   │   └── properties/
+│   │   │       ├── index.tsx
+│   │   │       └── [id].tsx
+│   │   ├── styles/             # Styles
+│   │   │   ├── globals.scss
+│   │   │   └── Home.module.scss
+│   │   ├── utils/              # Utilities
+│   │   │   └── apiClient.ts
+│   │   └── types/              # TypeScript types
+│   │       └── Property.ts
+│   ├── .env.local              # Environment variables
+│   ├── next.config.js          # Next.js configuration
+│   ├── package.json            # Project dependencies
+│   ├── tsconfig.json           # TypeScript configuration
+│   └── README.md               # Frontend README
+└── RealEstateApp.sln           # Solution file
 ```
 
 ---
@@ -56,6 +93,7 @@ Before setting up the project, ensure you have the following installed:
 
 - .NET 8 SDK ([Download here](https://dotnet.microsoft.com/))
 - MongoDB ([Download here](https://www.mongodb.com/try/download/community))
+- Node.js and npm ([Download here](https://nodejs.org/))
 - Visual Studio or VS Code (for development)
 
 ### **2. Clone the Repository**
@@ -67,7 +105,9 @@ git clone <https://github.com/Skpow1234/MillionAssestment>
 cd RealEstateApp
 ```
 
-### **3. Restore Dependencies**
+### **3. Backend Setup**
+
+#### Restore Dependencies
 
 Navigate to the root directory of the solution and run:
 
@@ -75,9 +115,7 @@ Navigate to the root directory of the solution and run:
 dotnet restore
 ```
 
-This will restore all NuGet packages for the solution.
-
-### **4. Set Up MongoDB**
+#### Set Up MongoDB
 
 1. **Start MongoDB**:
    Ensure your MongoDB instance is running. You can use the default connection string: `mongodb://localhost:27017`.
@@ -90,7 +128,7 @@ This will restore all NuGet packages for the solution.
    - `Properties`
    - `Owners`
 
-### **5. Update `appsettings.json`**
+#### Update `appsettings.json`
 
 Update the `appsettings.json` file in the **RealEstateApp.Api** project to include your MongoDB connection details:
 
@@ -103,15 +141,13 @@ Update the `appsettings.json` file in the **RealEstateApp.Api** project to inclu
 }
 ```
 
-### **6. Build the Project**
+#### Build and Run the Project
 
 Build the solution to ensure there are no errors:
 
 ```bash
 dotnet build
 ```
-
-### **7. Run the Project**
 
 Start the API by navigating to the **RealEstateApp.Api** folder and running:
 
@@ -121,36 +157,61 @@ dotnet run
 
 By default, the API will be available at `https://localhost:5001`.
 
-### **8. Test the API with Swagger**
+### **4. Frontend Setup**
 
-Swagger is pre-configured and accessible at:
+#### Create and Navigate to the Frontend Directory
+
+Navigate to the `RealEstateApp` directory and create the frontend project:
 
 ```bash
-https://localhost:5001/swagger
+npx create-next-app@latest realestateapp-frontend --typescript
+cd realestateapp-frontend
 ```
 
-You can use Swagger to test the endpoints and see the API documentation.
+#### Install Additional Dependencies
+
+Install the required dependencies:
+
+```bash
+npm install axios sass
+```
+
+#### Update Environment Variables
+
+Create a `.env.local` file in the frontend directory and add:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+#### Run the Frontend
+
+Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:3000`.
 
 ---
 
-## **Available Endpoints**
+## **Frontend Features**
 
-- **GET** `/api/properties`: Fetch all properties with optional filters.
-  - **Query Parameters**:
-    - `name`: Filter by property name.
-    - `address`: Filter by property address.
-    - `minPrice`: Filter by minimum price.
-    - `maxPrice`: Filter by maximum price.
-- **GET** `/api/properties/{id}`: Fetch a property by its ID.
-- **POST** `/api/properties`: Create a new property.
-- **PUT** `/api/properties/{id}`: Update an existing property.
-- **DELETE** `/api/properties/{id}`: Delete a property.
+- **Reusable Components**:
+  - `Layout` and `Navbar` for consistent UI structure.
+- **Pages**:
+  - Home (`/`): Displays the welcome page.
+  - Properties List (`/properties`): Fetches and displays all properties.
+  - Property Details (`/properties/[id]`): Displays details for a specific property.
+- **Axios API Client**:
+  - Pre-configured client for interacting with the backend.
 
 ---
 
 ## **Testing the Application**
 
-### **1. Run Unit Tests**
+### **1. Backend Unit Tests**
 
 Navigate to the **RealEstateApp.Tests** folder and execute:
 
@@ -158,28 +219,23 @@ Navigate to the **RealEstateApp.Tests** folder and execute:
 dotnet test
 ```
 
-This will run all unit and integration tests.
+### **2. Frontend Testing**
 
-### **2. Code Coverage**
-
-For code coverage, use the `coverlet.collector` package by adding the following option to the test command:
-
-```bash
-dotnet test --collect:"XPlat Code Coverage"
-```
+- **Basic Tests**:
+  - Verify API calls in the browser console.
+  - Test page navigation (`/`, `/properties`, `/properties/[id]`).
 
 ---
 
-## **Key Features**
+## **Available Endpoints**
 
-1. **Clean Architecture**:
-   - Separation of concerns with **Api**, **Domain**, and **Infrastructure** layers.
-2. **MongoDB Integration**:
-   - CRUD operations using `MongoDB.Driver`.
-3. **Unit and Integration Tests**:
-   - Comprehensive testing with `xUnit`, `Moq`, and `FluentAssertions`.
-4. **Swagger Integration**:
-   - Built-in API documentation for easy testing and integration.
+### Backend API Endpoints
+
+- **GET** `/api/properties`: Fetch all properties with optional filters.
+- **GET** `/api/properties/{id}`: Fetch a property by its ID.
+- **POST** `/api/properties`: Create a new property.
+- **PUT** `/api/properties/{id}`: Update an existing property.
+- **DELETE** `/api/properties/{id}`: Delete a property.
 
 ---
 
@@ -190,5 +246,3 @@ dotnet test --collect:"XPlat Code Coverage"
 3. Commit your changes: `git commit -m "Add some feature"`.
 4. Push to the branch: `git push origin feature-name`.
 5. Open a pull request.
-
----
